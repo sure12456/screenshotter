@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import simpledialog
+from tkinter import simpledialog, filedialog
 from PIL import Image, ImageTk
 import mss
 import datetime
+
 
 PREVIEW_WIDTH = 300  # Thumbnail width for monitor previews
 
@@ -14,11 +15,20 @@ def crop_image(image, top, bottom, left, right):
 # Save with DD prefix
 def ask_and_save(image):
     today_day = datetime.datetime.now().strftime("%d")
-    name = simpledialog.askstring("Save Screenshot", f"Enter name (will be saved as {today_day}-<your_input>.png):")
-    if not name:
-        return
-    filename = f"{today_day}-{name}.png"
-    image.save(filename)
+    # Suggest default filename with DD- prefix
+    # default_name = f"{today_day}-"
+
+    filepath = filedialog.asksaveasfilename(
+        defaultextension=".png",
+        filetypes=[("PNG Files", "*.png")],
+        # initialfile=default_name,
+        title="Save Screenshot As"
+    )
+
+    if not filepath:
+        return  # Cancelled
+
+    image.save(filepath)
 
 # Reload monitor thumbnails
 def reload_monitor_previews(container, top_var, bottom_var, left_var, right_var):
